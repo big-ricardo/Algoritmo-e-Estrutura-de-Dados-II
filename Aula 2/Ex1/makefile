@@ -21,10 +21,8 @@ $(EXECUTAVEL) : $(OBJETOS)
 clean:
 	rm -rf *.o
 
-run:
-	./$(EXECUTAVEL)
-
 rmproper: clean
 	rm -rf $(EXECUTAVEL)
 
 run: $(EXECUTAVEL)
+	./$(EXECUTAVEL)

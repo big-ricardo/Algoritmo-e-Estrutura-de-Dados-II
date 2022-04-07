@@ -65,9 +65,14 @@ tReturn* leArquivo(char nomeArquivo[]) {
     }
     int i = 0;
     int numero = 0;
-    int tamanho = 100;
+    int tamanho = 0;
 
-    retorno->tamanho = 0;
+    if (fscanf(A, "%d", &tamanho) == 0) {
+        retorno->error = 2;
+        return retorno;
+    }
+
+    retorno->tamanho = tamanho;
 
     int* vetor = (int*)malloc(sizeof(int) * tamanho);
 
@@ -77,17 +82,13 @@ tReturn* leArquivo(char nomeArquivo[]) {
     }
 
     while (fscanf(A, "%d", &numero) != EOF) {
-        if (i == tamanho) {
-            tamanho *= 2;
-            retorno->vetor = realloc(retorno->vetor, tamanho * sizeof(int));
-            if (retorno->vetor == NULL) {
-                retorno->error = 3;
-                return retorno;
-            }
-        }
-
         vetor[i] = numero;
         i++;
+    }
+
+    if (i != tamanho) {
+        retorno->error = 2;
+        return retorno;
     }
 
     retorno->vetor = vetor;
@@ -114,5 +115,4 @@ void imprimeVet(int* vet, int tam) {
     for (int i = 0; i < tam; i++) {
         printf("%d\n", vet[i]);
     }
-    printf("\n");
 }
