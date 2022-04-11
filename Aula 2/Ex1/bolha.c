@@ -1,6 +1,13 @@
 #include "bolha.h"
 #include <stdio.h>
 #include <stdlib.h>
+#define true 1
+#define false 0
+typedef int bool;
+
+/*
+  Luis Ricardo Albano Santos - 2021031844
+*/
 
 struct tReturn {
     void* vetor;
@@ -103,6 +110,22 @@ void bolha(int* vet, int tam) {
     for (int i = 0; i < tam; i++) {
         for (int j = 1; j < tam; j++) {
             if (vet[j] < vet[j - 1]) {
+                aux = vet[j - 1];
+                vet[j - 1] = vet[j];
+                vet[j] = aux;
+            }
+        }
+    }
+}
+
+void bolhaInteligente(int* vet, int tam) {
+    int aux;
+    bool troca = true;
+    for (int i = 0; (i < tam && troca); i++) {
+        troca = false;
+        for (int j = 1; j < tam; j++) {
+            if (vet[j] < vet[j - 1]) {
+                troca = true;
                 aux = vet[j - 1];
                 vet[j - 1] = vet[j];
                 vet[j] = aux;

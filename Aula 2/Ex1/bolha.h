@@ -34,6 +34,9 @@ tReturn* leArquivo(char nomeArquivo[]);
 void bolha (int *vet, int tam);
 //Essa função ordena o vetor usando o método bolha
 
+void bolhaInteligente (int *vet, int tam);
+//Essa função ordena o vetor usando o método bolhaInteligente
+
 void imprimeVet(int *vet, int tam);
 //Essa função imprime os dados de um vetor (um número por linha)
 

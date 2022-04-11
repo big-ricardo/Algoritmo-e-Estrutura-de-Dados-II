@@ -24,7 +24,7 @@ int main(void) {
   rep = leArquivo(nomeArquivo);
 
   if (getErro(rep) == 0) {
-    bolha(getVet(rep), getTam(rep));
+    bolhaInteligente(getVet(rep), getTam(rep));
     imprimeVet(getVet(rep), getTam(rep));
   }
   else {
