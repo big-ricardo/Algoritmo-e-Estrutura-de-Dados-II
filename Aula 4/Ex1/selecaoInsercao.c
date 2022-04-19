@@ -3,7 +3,6 @@
 #include "selecaoInsercao.h"
 #define true 1
 #define false 0
-typedef int bool;
 
 /*
   Luis Ricardo Albano Santos - 2021031844
@@ -106,7 +105,7 @@ void dualSelecao(int* vet, int tam) {
     for (int i = 0; i < tam; i++) {
         menor = i;
         maior = tam - i - 1;
-        for (int j = i + 1; j < tam - i; j++) {
+        for (int j = i; j < tam - i; j++) {
             if (vet[j] > vet[maior]) {
                 maior = j;
             }
