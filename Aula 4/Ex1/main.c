@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "bolha.h"
+#include "selecaoInsercao.h"
 #define true 1
 #define false 0
 typedef int bool;
@@ -12,24 +12,28 @@ typedef int bool;
 
 int main(void) {
 
-  char nomeArquivo[30];
+  char arquivo[20] = "arquivo.txt";
+  int qtd = 100;
+  int* vetor = NULL;
 
-  tReturn* rep;
+  geraAleatorios(arquivo, qtd);
+  vetor = leArquivo(arquivo, qtd);
+  imprimeVet(vetor, qtd);
 
-  rep = alocatReturn();
+  selecao(vetor, qtd);
+  imprimeVet(vetor, qtd);
 
-  // printf("Digite o nome do arquivo: ");
-  scanf("%s", nomeArquivo);
+  vetor = leArquivo(arquivo, qtd);
+  selecaoDecrescente(vetor, qtd);
+  imprimeVet(vetor, qtd);
 
-  rep = leArquivo(nomeArquivo);
+  vetor = leArquivo(arquivo, qtd);
+  dualSelecao(vetor, qtd);
+  imprimeVet(vetor, qtd);
 
-  if (getErro(rep) == 0) {
-    bolhaInteligente(getVet(rep), getTam(rep));
-    imprimeVet(getVet(rep), getTam(rep));
-  }
-  else {
-    trataErro(getErro(rep));
-  }
+  vetor = leArquivo(arquivo, qtd);
+  insercao(vetor, qtd);
+  imprimeVet(vetor, qtd);
 
   return 0;
 
