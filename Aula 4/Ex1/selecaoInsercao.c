@@ -60,7 +60,7 @@ int* leArquivo(char* nomeArquivo, int qtd) {
     }
 
     fclose(arquivo);
-    return vetor;
+    return (int*)vetor;
 }
 
 //Esta função recebe um vetor de inteiros de tamanho 'tam' e o ordena (ordem crescente) utilizando o método seleção
@@ -124,6 +124,8 @@ void dualSelecao(int* vet, int tam) {
             vet[maior] = aux;
         }
     }
+
+    return;
 }
 
 //Esta função recebe um vetor de inteiros de tamanho 'tam' e o ordena utilizando o método insercao
@@ -138,6 +140,8 @@ void insercao(int* vet, int tam) {
         }
         vet[j + 1] = aux;
     }
+
+    return;
 }
 
 //Esta função recebe um vetor e o imprime na tela

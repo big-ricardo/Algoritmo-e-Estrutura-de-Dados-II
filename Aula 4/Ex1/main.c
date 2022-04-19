@@ -18,7 +18,6 @@ int main(void) {
 
   geraAleatorios(arquivo, qtd);
   vetor = leArquivo(arquivo, qtd);
-  imprimeVet(vetor, qtd);
 
   selecao(vetor, qtd);
   imprimeVet(vetor, qtd);
