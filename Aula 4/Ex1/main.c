@@ -13,18 +13,19 @@ typedef int bool;
 int main(void) {
 
   char arquivo[20] = "arquivo.txt";
-  int qtd = 100;
+  int qtd = 10;
   int* vetor = NULL;
 
   geraAleatorios(arquivo, qtd);
   vetor = leArquivo(arquivo, qtd);
+  imprimeVet(vetor, qtd);
 
   selecao(vetor, qtd);
-  imprimeVet(vetor, qtd);
+  // imprimeVet(vetor, qtd);
 
   vetor = leArquivo(arquivo, qtd);
   selecaoDecrescente(vetor, qtd);
-  imprimeVet(vetor, qtd);
+  // imprimeVet(vetor, qtd);
 
   vetor = leArquivo(arquivo, qtd);
   dualSelecao(vetor, qtd);

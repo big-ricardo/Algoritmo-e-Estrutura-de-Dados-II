@@ -1,7 +1,6 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include "selecaoInsercao.h"
-#include<time.h>
 #define true 1
 #define false 0
 typedef int bool;
@@ -18,7 +17,7 @@ typedef int bool;
 //Pesquisem pelas funções rand() e srand().
 int geraAleatorios(char* nomeArquivo, int qtd) {
 
-    srand(time(NULL));
+    srand(qtd);
 
     FILE* arquivo = fopen(nomeArquivo, "w+");
 
@@ -101,16 +100,18 @@ void selecaoDecrescente(int* vet, int tam) {
 
 //Esta função recebe um vetor de inteiros de tamanho 'tam' e o ordena utilizando o método dual seleção
 void dualSelecao(int* vet, int tam) {
+
     int aux, menor, maior;
-    for (int i = 0; i < tam - 1; i++) {
+
+    for (int i = 0; i < tam; i++) {
         menor = i;
         maior = tam - i - 1;
         for (int j = i + 1; j < tam - i; j++) {
-            if (vet[j] < vet[menor]) {
-                menor = j;
-            }
             if (vet[j] > vet[maior]) {
                 maior = j;
+            }
+            else if (vet[j] < vet[menor]) {
+                menor = j;
             }
         }
         if (i != menor) {
@@ -124,7 +125,6 @@ void dualSelecao(int* vet, int tam) {
             vet[maior] = aux;
         }
     }
-
     return;
 }
 
