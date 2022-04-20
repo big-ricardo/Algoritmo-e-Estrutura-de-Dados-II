@@ -99,31 +99,39 @@ void selecaoDecrescente(int* vet, int tam) {
 
 //Esta função recebe um vetor de inteiros de tamanho 'tam' e o ordena utilizando o método dual seleção
 void dualSelecao(int* vet, int tam) {
+    for (int i = 0, j = tam - 1; i < j; i++, j--) {
+        int menor = vet[i], maior = vet[i];
+        int menor_i = i, maior_i = i;
 
-    int aux, menor, maior;
-
-    for (int i = 0; i < tam; i++) {
-        menor = i;
-        maior = tam - i - 1;
-        for (int j = i; j < tam - i; j++) {
-            if (vet[j] > vet[maior]) {
-                maior = j;
+        for (int k = i; k <= j; k++) {
+            if (vet[k] > maior) {
+                maior = vet[k];
+                maior_i = k;
             }
-            else if (vet[j] < vet[menor]) {
-                menor = j;
+            else if (vet[k] < menor) {
+                menor = vet[k];
+                menor_i = k;
             }
         }
-        if (i != menor) {
-            aux = vet[i];
-            vet[i] = vet[menor];
-            vet[menor] = aux;
+
+        if (menor_i != i) {
+            int aux = vet[i];
+            vet[i] = vet[menor_i];
+            vet[menor_i] = aux;
         }
-        if (i != maior) {
-            aux = vet[tam - i - 1];
-            vet[tam - i - 1] = vet[maior];
-            vet[maior] = aux;
+
+        if (vet[menor_i] == maior) {
+            int aux = vet[j];
+            vet[j] = vet[menor_i];
+            vet[menor_i] = aux;
+        }
+        else {
+            int aux = vet[j];
+            vet[j] = vet[maior_i];
+            vet[maior_i] = aux;
         }
     }
+
     return;
 }
 
