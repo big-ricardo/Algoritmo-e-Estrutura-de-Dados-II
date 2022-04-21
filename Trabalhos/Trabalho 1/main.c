@@ -2,22 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "dados.h"
 #define true 1
 #define false 0
 #define CASOS_TESTE 2
 typedef int bool;
 
-const int TAMS[4] = { 10000, 1000000, 500000, 1000000 };
-// const int TAMS[2] = { 5, 10 };
 /*
   Luis Ricardo Albano Santos - 2021031844
   gcc -pedantic-errors -Wall main.c -o main.exe && ./main.exe
 */
 
+const int TAMS[2] = { 10, 20 };
+
 int main(void) {
 
   void renderizarMenu(bool);
-  bool gerarCasosTeste();
+  bool gerarCasos(int);
+  bool gerarResultados(int);
 
   char buff[5], opcao;
   bool error = false;
@@ -29,12 +31,13 @@ int main(void) {
     sscanf(buff, "%c", &opcao);
     switch (opcao) {
     case '1':
-      gerarCasosTeste();
+      gerarCasos(CASOS_TESTE);
       break;
     case '2':
-      gerarCasosTeste();
+      gerarCasos(CASOS_TESTE);
       break;
     case '3':
+      gerarResultados(CASOS_TESTE);
       break;
     case '4':
       break;
@@ -48,7 +51,7 @@ int main(void) {
 }
 
 void renderizarMenu(bool error) {
-  system("clear || cls");
+  // system("clear || cls");
   printf("-----------------Menu----------------\n");
   printf("1. Gerar Dados e Resultado\n");
   printf("2. Gerar Dados\n");
@@ -59,124 +62,55 @@ void renderizarMenu(bool error) {
     printf("Opção inválida!\n");
 }
 
-bool gerarCasosTeste() {
-  bool gerarDados(char, int);
+// Função é a responsavel por chamar a função para gerar os conjuntos de dados, 
+// para cada tamanho TAMS[i]
+bool gerarCasos(int casos_teste) {
 
   int tam = sizeof(TAMS) / sizeof(TAMS[0]);
 
   for (int i = 0; i < tam; i++) {
-    if (!gerarDados('a', TAMS[i]))
+    if (!gerarDados('a', TAMS[i], casos_teste))
       return false;
-    if (!gerarDados('c', TAMS[i]))
+    if (!gerarDados('c', TAMS[i], casos_teste))
       return false;
-    if (!gerarDados('d', TAMS[i]))
+    if (!gerarDados('d', TAMS[i], casos_teste))
       return false;
-  }
-
-  return true;
-
-}
-
-bool gerarDados(char tipo, int qtd) {
-
-  FILE* abrirArquivoDados(char, int, bool, int);
-  bool gerarDadosAleatorios(FILE*, int);
-  bool gerarDadosCrescente(FILE*, int);
-  bool gerarDadosDecrescente(FILE*, int);
-  bool retorno = false;
-
-  for (int i = 0; i < CASOS_TESTE; i++) {
-    FILE* arquivo = abrirArquivoDados(tipo, qtd, false, i);
-
-    if (arquivo == NULL)
-      return false;
-
-    switch (tipo) {
-    case 'a':
-      retorno = gerarDadosAleatorios(arquivo, qtd);
-      break;
-    case 'c':
-      retorno = gerarDadosCrescente(arquivo, qtd);
-      break;
-    case 'd':
-      retorno = gerarDadosDecrescente(arquivo, qtd);
-      break;
-    }
-
-    fclose(arquivo);
-
-    if (!retorno)
-      return false;
-  }
-
-  return retorno;
-}
-
-FILE* abrirArquivoDados(char tipo, int qtd, bool read, int indice) {
-  FILE* arquivo;
-  char path[50] = "";
-  char nome[15] = "";
-
-  sprintf(nome, "%d_%d.txt", indice, qtd);
-
-  switch (tipo) {
-  case 'a':
-    strcpy(path, "./casos_teste/aleatorios/");
-    break;
-  case 'c':
-    strcpy(path, "./casos_teste/cresecente/");
-    break;
-  case 'd':
-    strcpy(path, "./casos_teste/decresente/");
-    break;
-  default:
-    return NULL;
-  }
-
-  strcat(path, nome);
-  arquivo = fopen(path, read ? "r" : "w+");
-
-  if (arquivo == NULL) {
-    printf("Erro ao criar arquivo.\n");
-  }
-
-  return arquivo;
-}
-
-bool gerarDadosAleatorios(FILE* arquivo, int qtd) {
-  srand(time(NULL));
-  for (int i = 0; i < qtd; i++) {
-    if (fprintf(arquivo, "%d\n", rand() % qtd) < 0) {
-      return false;
-    }
   }
 
   return true;
 }
 
-bool gerarDadosCrescente(FILE* arquivo, int qtd) {
-  srand(time(NULL));
-  int dado = rand() % 100 + 1;
+bool realizarOrdenacao(char tipo, bool funcao(int*, int), int tam, int casos_teste) {
 
-  for (int i = 0; i < qtd; i++) {
-    if (fprintf(arquivo, "%d\n", dado) < 0) {
+  for (int j = 0; j < casos_teste; j++) {
+    int* dados = lerDados(tipo, tam, j);
+
+    if (dados == NULL) {
+      free(dados);
       return false;
     }
-    dado = dado + rand() % 100;
+
+    free(dados);
   }
 
   return true;
 }
 
-bool gerarDadosDecrescente(FILE* arquivo, int qtd) {
-  srand(time(NULL));
-  long int dado = (qtd * 10) + (rand() % 100);
+bool gerarResultados(int casos_teste) {
 
-  for (int i = 0; i < qtd; i++) {
-    if (fprintf(arquivo, "%ld\n", dado) < 0) {
+  int tam = sizeof(TAMS) / sizeof(TAMS[0]);
+
+  for (int i = 0; i < tam; i++) {
+
+    if (!realizarOrdenacao('a', NULL, TAMS[i], casos_teste))
       return false;
-    }
-    dado = dado - rand() % 10;
+
+    if (!realizarOrdenacao('c', NULL, TAMS[i], casos_teste))
+      return false;
+
+    if (!realizarOrdenacao('d', NULL, TAMS[i], casos_teste))
+      return false;
+
   }
 
   return true;
