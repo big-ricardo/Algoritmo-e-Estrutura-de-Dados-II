@@ -14,7 +14,7 @@ typedef int bool;
   gcc -pedantic-errors -Wall main.c -o main.exe && ./main.exe
 */
 
-const int TAMS[2] = { 10, 20 };
+const int TAMS[2] = { 1000, 100000 };
 
 int main(void) {
 

@@ -10,8 +10,8 @@
 
 typedef struct {
     double tempo;
-    int trocas;
-    int copias;
+    unsigned long int trocas;
+    unsigned long int copias;
     char tipo;
     int qtd;
     int caso;
@@ -19,8 +19,10 @@ typedef struct {
 } Registro;
 
 
-int bubbleSort(int* vetor, int tam) {
-    int i, j, aux, trocas = 0;
+unsigned long int bubbleSort(int* vetor, int tam) {
+    int i, j, aux;
+    unsigned long int trocas = 0;
+
     for (i = 0; i < tam; i++) {
         for (j = 0; j < tam - 1; j++) {
             if (vetor[j] > vetor[j + 1]) {
@@ -36,6 +38,8 @@ int bubbleSort(int* vetor, int tam) {
 }
 
 bool computarOrdenacaoBubbleSort(Registro* r, int* vetor, int tamanho) {
+
+    printf("Iniciando Bubble Sort de %d do caso %d do tipo %c\n", tamanho, r->caso, r->tipo);
 
     clock_t inicio, fim;
     inicio = clock();
@@ -119,7 +123,7 @@ FILE* salvarRegistro(Registro r) {
         return NULL;
     }
 
-    if (fprintf(arquivo, "%c,%d,%d,%lf,%d,%d\n", r.tipo, r.qtd, r.caso, r.tempo, r.trocas, r.copias) < 0) {
+    if (fprintf(arquivo, "%c,%d,%d,%lf,%ld,%ld\n", r.tipo, r.qtd, r.caso, r.tempo, r.trocas, r.copias) < 0) {
         printf("Erro ao salvar registro de resultado %s.\n", path);
         return NULL;
     }
