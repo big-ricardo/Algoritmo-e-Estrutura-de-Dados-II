@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "dados.h"
+#include "ordenacao.h"
 #define true 1
 #define false 0
 #define CASOS_TESTE 2
@@ -56,7 +57,8 @@ void renderizarMenu(bool error) {
   printf("1. Gerar Dados e Resultado\n");
   printf("2. Gerar Dados\n");
   printf("3. Gerar Resultado\n");
-  printf("4. Sair\n");
+  printf("4. Zerar Dados de Resultado\n");
+  printf("5. Sair\n");
   printf("---------------------------------------\n");
   if (error)
     printf("Opção inválida!\n");
@@ -80,35 +82,29 @@ bool gerarCasos(int casos_teste) {
   return true;
 }
 
-bool realizarOrdenacao(char tipo, bool funcao(int*, int), int tam, int casos_teste) {
-
-  for (int j = 0; j < casos_teste; j++) {
-    int* dados = lerDados(tipo, tam, j);
-
-    if (dados == NULL) {
-      free(dados);
-      return false;
-    }
-
-    free(dados);
-  }
-
-  return true;
-}
-
 bool gerarResultados(int casos_teste) {
+
+  zerarArquivosResultados();
 
   int tam = sizeof(TAMS) / sizeof(TAMS[0]);
 
   for (int i = 0; i < tam; i++) {
 
-    if (!realizarOrdenacao('a', NULL, TAMS[i], casos_teste))
+    if (!realizarOrdenacao('a', 'b', TAMS[i], casos_teste))
       return false;
 
-    if (!realizarOrdenacao('c', NULL, TAMS[i], casos_teste))
+  }
+
+  for (int i = 0; i < tam; i++) {
+
+    if (!realizarOrdenacao('c', 'b', TAMS[i], casos_teste))
       return false;
 
-    if (!realizarOrdenacao('d', NULL, TAMS[i], casos_teste))
+  }
+
+  for (int i = 0; i < tam; i++) {
+
+    if (!realizarOrdenacao('d', 'b', TAMS[i], casos_teste))
       return false;
 
   }
