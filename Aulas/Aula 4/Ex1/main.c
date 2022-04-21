@@ -13,7 +13,7 @@ typedef int bool;
 int main(void) {
 
   char arquivo[20] = "arquivo.txt";
-  int qtd = 15;
+  int qtd = 10;
   int* vetor = NULL;
 
   geraAleatorios(arquivo, qtd);
