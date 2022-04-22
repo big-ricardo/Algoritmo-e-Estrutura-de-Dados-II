@@ -90,21 +90,30 @@ bool gerarResultados(int casos_teste) {
 
   for (int i = 0; i < tam; i++) {
 
-    if (!realizarOrdenacao('a', 'b', TAMS[i], casos_teste))
+    if (!realizarOrdenacao('a', 's', TAMS[i], casos_teste))
+      return false;
+
+    if (!realizarOrdenacao('a', 'q', TAMS[i], casos_teste))
       return false;
 
   }
 
   for (int i = 0; i < tam; i++) {
 
-    if (!realizarOrdenacao('c', 'b', TAMS[i], casos_teste))
+    if (!realizarOrdenacao('c', 's', TAMS[i], casos_teste))
+      return false;
+
+    if (!realizarOrdenacao('c', 'q', TAMS[i], casos_teste))
       return false;
 
   }
 
   for (int i = 0; i < tam; i++) {
 
-    if (!realizarOrdenacao('d', 'b', TAMS[i], casos_teste))
+    if (!realizarOrdenacao('d', 's', TAMS[i], casos_teste))
+      return false;
+
+    if (!realizarOrdenacao('d', 'q', TAMS[i], casos_teste))
       return false;
 
   }

@@ -1,142 +1,72 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include "dados.h"
-#define true 1
-#define false 0
+#include "resultado.h"
 
-#define RESULTADO_TXT "./resutados/r"
+void selecao(Registro* r, int* vet, int tam) {
+    int aux, menor;
+    int comparacoes = 0, copias = 0;
 
-typedef struct {
-    double tempo;
-    unsigned long int trocas;
-    unsigned long int copias;
-    char tipo;
-    int qtd;
-    int caso;
-    char* metodo;
-} Registro;
+    for (int i = 0; i < tam - 1; i++) {
+        menor = i;
+        for (int j = i + 1; j < tam; j++) {
+            if (vet[j] < vet[menor]) {
+                menor = j;
+            }
+        }
+        comparacoes += tam - i;
 
+        if (vet[menor] < vet[i]) {
+            aux = vet[i];
+            vet[i] = vet[menor];
+            vet[menor] = aux;
+        }
+    }
 
-unsigned long int bubbleSort(int* vetor, int tam) {
-    int i, j, aux;
-    unsigned long int trocas = 0;
+    r->comparacoes = comparacoes;
+    r->copias = copias;
 
-    for (i = 0; i < tam; i++) {
-        for (j = 0; j < tam - 1; j++) {
-            if (vetor[j] > vetor[j + 1]) {
-                trocas++;
-                aux = vetor[j];
-                vetor[j] = vetor[j + 1];
-                vetor[j + 1] = aux;
+    return;
+}
+
+int  particiona(Registro* r, int* vet, int inicio, int fim) {
+    int pivo = vet[inicio];
+    int pos = inicio;
+    int aux, comparacoes = 0, copias = 0;
+
+    for (int i = inicio + 1; i <= fim; i++) {
+        if (vet[i] < pivo) {
+            pos++;
+            if (pos != i) {
+                aux = vet[pos];
+                vet[pos] = vet[i];
+                vet[i] = aux;
+                copias += 3;
             }
         }
     }
 
-    return trocas;
+    aux = vet[inicio];
+    vet[inicio] = vet[pos];
+    vet[pos] = aux;
+
+    copias += 3;
+
+    r->comparacoes += comparacoes;
+    r->copias += copias;
+
+    return pos;
 }
 
-bool computarOrdenacaoBubbleSort(Registro* r, int* vetor, int tamanho) {
+void quickSort(Registro* r, int* vet, int inicio, int fim) {
+    int pivo;
+    int comparacoes = 0, copias = 0;
 
-    printf("Iniciando Bubble Sort de %d do caso %d do tipo %c\n", tamanho, r->caso, r->tipo);
-
-    clock_t inicio, fim;
-    inicio = clock();
-
-    r->trocas = bubbleSort(vetor, tamanho);
-
-    fim = clock();
-    r->tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
-
-    return true;
-}
-
-bool realizarOrdenacao(char tipo, char metodo, int tam, int casos_teste) {
-
-    FILE* salvarRegistro(Registro);
-
-    Registro r;
-    r.tipo = tipo;
-    r.qtd = tam;
-
-    for (int j = 0; j < casos_teste; j++) {
-        int* dados = lerDados(tipo, tam, j);
-
-        r.trocas = 0;
-        r.copias = 0;
-        r.tempo = 0;
-        r.caso = j;
-
-        if (dados == NULL) {
-            free(dados);
-            return false;
-        }
-
-        switch (metodo) {
-        case 'b':
-            r.metodo = "bubbleSort";
-            computarOrdenacaoBubbleSort(&r, dados, tam);
-            break;
-        case 'i':
-            break;
-        }
-
-        free(dados);
-
-        if (!salvarRegistro(r)) {
-            printf("Erro ao escrever resultado\n");
-            return false;
-        }
+    if (inicio < fim) {
+        pivo = particiona(r, vet, inicio, fim);
+        quickSort(r, vet, inicio, pivo - 1);
+        quickSort(r, vet, pivo + 1, fim);
     }
 
-    return true;
-}
+    r->comparacoes += comparacoes;
+    r->copias += copias;
 
-bool criarArquivoResultado(char* metodo) {
-    char path[40] = "";
-
-    sprintf(path, "%s_%s.csv", RESULTADO_TXT, metodo);
-
-    FILE* arquivo = fopen(path, "w+");
-    if (arquivo == NULL)
-        return false;
-
-    if (fprintf(arquivo, "tipo,qtd,caso,tempo,trocas,copias\n") < 0) {
-        printf("Erro ao criar arquivo de resultado\n");
-        return false;
-    }
-
-    fclose(arquivo);
-    return true;
-}
-
-FILE* salvarRegistro(Registro r) {
-    char path[40] = "";
-
-    sprintf(path, "%s_%s.csv", RESULTADO_TXT, r.metodo);
-
-    FILE* arquivo = fopen(path, "a+");
-
-    if (arquivo == NULL) {
-        printf("Erro ao abrir arquivo de resultado %s.\n", path);
-        return NULL;
-    }
-
-    if (fprintf(arquivo, "%c,%d,%d,%lf,%ld,%ld\n", r.tipo, r.qtd, r.caso, r.tempo, r.trocas, r.copias) < 0) {
-        printf("Erro ao salvar registro de resultado %s.\n", path);
-        return NULL;
-    }
-
-    fclose(arquivo);
-
-    return arquivo;
-}
-
-bool zerarArquivosResultados() {
-
-    if (!criarArquivoResultado("bubbleSort"))
-        return false;
-
-    return true;
+    return;
 }
