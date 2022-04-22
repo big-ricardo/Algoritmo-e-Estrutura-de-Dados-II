@@ -6,7 +6,7 @@
 #include "ordenacao.h"
 #define true 1
 #define false 0
-#define CASOS_TESTE 2
+#define CASOS_TESTE 1
 typedef int bool;
 
 /*
@@ -14,7 +14,7 @@ typedef int bool;
   gcc -pedantic-errors -Wall main.c -o main.exe && ./main.exe
 */
 
-const int TAMS[2] = { 1000, 100000 };
+const int TAMS[1] = { 1000 };
 
 int main(void) {
 
@@ -33,6 +33,7 @@ int main(void) {
     switch (opcao) {
     case '1':
       gerarCasos(CASOS_TESTE);
+      gerarResultados(CASOS_TESTE);
       break;
     case '2':
       gerarCasos(CASOS_TESTE);
@@ -57,8 +58,7 @@ void renderizarMenu(bool error) {
   printf("1. Gerar Dados e Resultado\n");
   printf("2. Gerar Dados\n");
   printf("3. Gerar Resultado\n");
-  printf("4. Zerar Dados de Resultado\n");
-  printf("5. Sair\n");
+  printf("4. Sair\n");
   printf("---------------------------------------\n");
   if (error)
     printf("Opção inválida!\n");
