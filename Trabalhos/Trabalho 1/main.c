@@ -14,7 +14,9 @@ typedef int bool;
   gcc -pedantic-errors -Wall main.c -o main.exe && ./main.exe
 */
 
-const int TAMS[1] = { 1000 };
+const char N_METODOS[] = { 's', 'q', 'm' };
+
+const int TAMS[] = { 1000 };
 
 int main(void) {
 
@@ -30,6 +32,7 @@ int main(void) {
     printf("Digite a opcao desejada: ");
     fgets(buff, 5, stdin);
     sscanf(buff, "%c", &opcao);
+    system("clear || cls");
     switch (opcao) {
     case '1':
       gerarCasos(CASOS_TESTE);
@@ -53,7 +56,6 @@ int main(void) {
 }
 
 void renderizarMenu(bool error) {
-  // system("clear || cls");
   printf("-----------------Menu----------------\n");
   printf("1. Gerar Dados e Resultado\n");
   printf("2. Gerar Dados\n");
@@ -86,37 +88,31 @@ bool gerarResultados(int casos_teste) {
 
   zerarArquivosResultados();
 
-  int tam = sizeof(TAMS) / sizeof(TAMS[0]);
+  int n_casos = sizeof(TAMS) / sizeof(TAMS[0]);
+  int n_metodos = sizeof(N_METODOS) / sizeof(N_METODOS[0]);
 
-  for (int i = 0; i < tam; i++) {
-
-    if (!realizarOrdenacao('a', 's', TAMS[i], casos_teste))
-      return false;
-
-    if (!realizarOrdenacao('a', 'q', TAMS[i], casos_teste))
-      return false;
-
+  for (int i = 0; i < n_casos; i++) {
+    for (int j = 0; j < n_metodos; j++) {
+      if (!realizarOrdenacao('a', N_METODOS[j], TAMS[i], casos_teste))
+        return false;
+    }
   }
 
-  for (int i = 0; i < tam; i++) {
-
-    if (!realizarOrdenacao('c', 's', TAMS[i], casos_teste))
-      return false;
-
-    if (!realizarOrdenacao('c', 'q', TAMS[i], casos_teste))
-      return false;
-
+  for (int i = 0; i < n_casos; i++) {
+    for (int j = 0; j < n_metodos; j++) {
+      if (!realizarOrdenacao('c', N_METODOS[j], TAMS[i], casos_teste))
+        return false;
+    }
   }
 
-  for (int i = 0; i < tam; i++) {
-
-    if (!realizarOrdenacao('d', 's', TAMS[i], casos_teste))
-      return false;
-
-    if (!realizarOrdenacao('d', 'q', TAMS[i], casos_teste))
-      return false;
-
+  for (int i = 0; i < n_casos; i++) {
+    for (int j = 0; j < n_metodos; j++) {
+      if (!realizarOrdenacao('d', N_METODOS[j], TAMS[i], casos_teste))
+        return false;
+    }
   }
+
+  printf("Ordenacao realizada com sucesso\n");
 
   return true;
 }

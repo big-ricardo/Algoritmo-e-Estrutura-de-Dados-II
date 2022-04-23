@@ -3,8 +3,14 @@
 #ifndef ORDENACAO_H
 #define ORDENACAO_H
 
-void selecao(Registro*, int* vet, int tam);
+void selecao(Registro*, int*, int);
 
-void quickSort(Registro* r, int* vet, int inicio, int fim);
+void quickSort(Registro*, int*, int, int);
+
+void mobileSort(Registro*, int*, int);
+
+bool criarArquivoOrdenacao(char*);
+
+bool salvarOrdenacao(Registro, int*, int);
 
 #endif
