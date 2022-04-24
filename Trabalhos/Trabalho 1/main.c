@@ -6,7 +6,10 @@
 #include "ordenacao.h"
 #define true 1
 #define false 0
-#define CASOS_TESTE 1
+
+// Numero de casos de teste que serão feitos para cada tamanho de vetor
+#define CASOS_TESTE 10
+
 typedef int bool;
 
 /*
@@ -14,9 +17,12 @@ typedef int bool;
   gcc -pedantic-errors -Wall main.c -o main.exe && ./main.exe
 */
 
+// Chaves de identificação dos metodos de ordenação (ordenacao.c) implementados
 const char N_METODOS[] = { 's', 'q', 'm' };
 
-const int TAMS[] = { 1000 };
+// Tamanho dos vetores de dados
+const int TAMS[] = { 10000, 100000, 500000, 1000000 };
+// const int TAMS[] = { 500000 };
 
 int main(void) {
 
@@ -55,6 +61,7 @@ int main(void) {
   return 0;
 }
 
+// Função é a responsavel por renderizar o menu de opções
 void renderizarMenu(bool error) {
   printf("-----------------Menu----------------\n");
   printf("1. Gerar Dados e Resultado\n");
@@ -70,9 +77,15 @@ void renderizarMenu(bool error) {
 // para cada tamanho TAMS[i]
 bool gerarCasos(int casos_teste) {
 
-  int tam = sizeof(TAMS) / sizeof(TAMS[0]);
+  void renderizarProgresso(int, int, bool);
 
-  for (int i = 0; i < tam; i++) {
+  int tam = sizeof(TAMS) / sizeof(TAMS[0]);
+  int arquivos_gerados = 0;
+
+  for (int i = 0; i < tam; i++, arquivos_gerados++) {
+
+    renderizarProgresso(arquivos_gerados, tam, true);
+
     if (!gerarDados('a', TAMS[i], casos_teste))
       return false;
     if (!gerarDados('c', TAMS[i], casos_teste))
@@ -81,38 +94,68 @@ bool gerarCasos(int casos_teste) {
       return false;
   }
 
+  renderizarProgresso(arquivos_gerados, tam, true);
+
   return true;
 }
 
+// Função é a responsavel por chamar a função de ordenação com os casos de teste
+// de TAM[i] para cada metodo de ordenação e tipo de dados (aleatorio, crescente, decrescente)
 bool gerarResultados(int casos_teste) {
+
+  void renderizarProgresso(int, int, bool);
 
   zerarArquivosResultados();
 
   int n_casos = sizeof(TAMS) / sizeof(TAMS[0]);
   int n_metodos = sizeof(N_METODOS) / sizeof(N_METODOS[0]);
+  int testes_concluidos = 0, total = n_casos * n_metodos * 2;
 
   for (int i = 0; i < n_casos; i++) {
-    for (int j = 0; j < n_metodos; j++) {
+    for (int j = 0; j < n_metodos; j++, testes_concluidos++) {
+      renderizarProgresso(testes_concluidos, total, false);
       if (!realizarOrdenacao('a', N_METODOS[j], TAMS[i], casos_teste))
         return false;
     }
   }
 
   for (int i = 0; i < n_casos; i++) {
-    for (int j = 0; j < n_metodos; j++) {
+    for (int j = 0; j < n_metodos; j++, testes_concluidos++) {
+      renderizarProgresso(testes_concluidos, total, false);
       if (!realizarOrdenacao('c', N_METODOS[j], TAMS[i], casos_teste))
         return false;
     }
   }
 
   for (int i = 0; i < n_casos; i++) {
-    for (int j = 0; j < n_metodos; j++) {
+    for (int j = 0; j < n_metodos; j++, testes_concluidos++) {
+      renderizarProgresso(testes_concluidos, total, false);
       if (!realizarOrdenacao('d', N_METODOS[j], TAMS[i], casos_teste))
         return false;
     }
   }
 
-  printf("Ordenacao realizada com sucesso\n");
+  renderizarProgresso(testes_concluidos, total, false);
 
   return true;
+}
+
+// Função é a responsavel por renderizar o progresso do processo de gerar os dados de ordenação
+void renderizarProgresso(int atual, int total, bool tipo) {
+  system("clear || cls");
+  printf("%d %d %d\n", atual, total, tipo);
+  printf("Progresso de %s:\n", tipo ? "Geracao de dados" : "Ordenacao");
+
+  int porcentagem = (atual * 100) / total;
+
+  for (int i = 0; i < porcentagem / 5; i++) {
+    printf("#");
+  }
+
+  for (int i = porcentagem / 5; i < 20; i++) {
+    printf(" ");
+  }
+
+  printf(" | %d %%\n", porcentagem);
+
 }

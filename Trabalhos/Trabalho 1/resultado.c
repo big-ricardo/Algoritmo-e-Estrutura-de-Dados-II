@@ -19,8 +19,6 @@
 
 bool computarOrdenacaoMobileSort(Registro* r, int* vet, int tamanho) {
 
-    printf("Ordenando Mobile Sort de %d do caso %d do tipo %c ...\n", tamanho, r->caso, r->tipo);
-
     clock_t inicio, fim;
 
     inicio = clock();
@@ -35,8 +33,6 @@ bool computarOrdenacaoMobileSort(Registro* r, int* vet, int tamanho) {
 
 bool computarOrdenacaoSelectionSort(Registro* r, int* vetor, int tamanho) {
 
-    printf("Ordenando Selection Sort de %d do caso %d do tipo %c ...\n", tamanho, r->caso, r->tipo);
-
     clock_t inicio, fim;
     inicio = clock();
 
@@ -49,8 +45,6 @@ bool computarOrdenacaoSelectionSort(Registro* r, int* vetor, int tamanho) {
 }
 
 bool computarOrdenacaoQuickSort(Registro* r, int* vetor, int tamanho) {
-
-    printf("Ordenando Quick Sort de %d do caso %d do tipo %c ...\n", tamanho, r->caso, r->tipo);
 
     clock_t inicio, fim;
     inicio = clock();

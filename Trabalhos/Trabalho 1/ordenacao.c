@@ -10,9 +10,10 @@
 
 typedef int bool;
 
+// Algoritmo de ordenação selectionSort
 void selecao(Registro* r, int* vet, int tam) {
     int aux, menor;
-    int comparacoes = 0, copias = 0;
+    unsigned long int comparacoes = 0, copias = 0;
 
     for (int i = 0; i < tam - 1; i++) {
         menor = i;
@@ -37,12 +38,15 @@ void selecao(Registro* r, int* vet, int tam) {
     return;
 }
 
+// Algoritmo responsavel por particionar o vetor para o quick sort
 int  particiona(Registro* r, int* vet, int inicio, int fim) {
     int pivo = vet[inicio];
     int pos = inicio;
-    int aux, comparacoes = 0, copias = 0;
+    int aux;
+    int comparacoes = 0, copias = 0;
 
     for (int i = inicio + 1; i <= fim; i++) {
+        comparacoes++;
         if (vet[i] < pivo) {
             pos++;
             if (pos != i) {
@@ -66,6 +70,7 @@ int  particiona(Registro* r, int* vet, int inicio, int fim) {
     return pos;
 }
 
+// Algoritmo de ordenação QuickSort
 void quickSort(Registro* r, int* vet, int inicio, int fim) {
     int pivo;
 
@@ -78,8 +83,9 @@ void quickSort(Registro* r, int* vet, int inicio, int fim) {
     return;
 }
 
+// Algortimo de ordenacao apresentado no 
 void mobileSort(Registro* r, int* vet, int tam) {
-    int copias = 0, comparacoes = 0;
+    unsigned long int copias = 0, comparacoes = 0;
 
     for (int i = 0; i < tam; i++) {
         int maior = i;

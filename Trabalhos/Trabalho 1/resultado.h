@@ -3,6 +3,8 @@
 
 typedef int bool;
 
+
+// Struct que armazena as metricas dosresultados das ordenações
 typedef struct {
     double tempo;
     unsigned long int comparacoes;
@@ -13,8 +15,10 @@ typedef struct {
     char* metodo;
 } Registro;
 
+// Função responsável chamar o algoritmo de ordenação que le é passado
 bool realizarOrdenacao(char, char, int, int);
 
+// Função responsável por gerar o arquivo ou limpar caso já exista
 bool zerarArquivosResultados();
 
 #endif

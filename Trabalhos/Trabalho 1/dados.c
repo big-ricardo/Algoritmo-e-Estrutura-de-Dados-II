@@ -135,6 +135,7 @@ bool gerarDadosDecrescente(FILE* arquivo, int qtd) {
     return true;
 }
 
+// Função é a responsavel por ler os dados do arquivo passado (arquivo), e retornar
 int* lerDados(char tipo, int qtd, int caso_teste) {
     FILE* arquivo = abrirArquivoDados(tipo, qtd, true, caso_teste);
     int* dados = (int*)malloc(sizeof(int) * qtd);
