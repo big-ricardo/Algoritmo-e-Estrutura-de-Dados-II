@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "mergeQuick.h"
-#define true 1
-#define false 0
 
 /*
   Luis Ricardo Albano Santos - 2021031844
@@ -11,25 +10,27 @@
 
 int geraAleatorios(char* nomeArquivo, int qtd) {
 
-    srand(qtd);
+    srand(time(NULL));
 
     FILE* arquivo = fopen(nomeArquivo, "w+");
 
     if (arquivo == NULL) {
-        fclose(arquivo);
-        return false;
+        printf("Erro ao abrir o arquivo.\n");
+        return 0;
     }
 
+    int numero;
     for (int i = 0; i < qtd; i++) {
-        int numero = rand() % 1000;
+        numero = rand() % 1000;
         if (!fprintf(arquivo, "%d\n", numero)) {
+            printf("Erro ao escrever no arquivo.\n");
             fclose(arquivo);
-            return false;
+            return 0;
         }
     }
 
     fclose(arquivo);
-    return true;
+    return 1;
 }
 
 //Esta função lê 'qtd' dados do arquivo 'nomeArquivo' e os insere em um vetor de inteiros
@@ -37,15 +38,22 @@ int geraAleatorios(char* nomeArquivo, int qtd) {
 int* leArquivo(char* nomeArquivo, int qtd) {
     int* vetor = (int*)malloc(qtd * sizeof(int));
 
+    if (vetor == NULL) {
+        printf("Erro ao alocar memória.\n");
+        return NULL;
+    }
+
     FILE* arquivo = fopen(nomeArquivo, "r");
 
     if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
         free(vetor);
         return NULL;
     }
 
     for (int i = 0; i < qtd; i++) {
         if (fscanf(arquivo, "%d", &vetor[i]) != 1) {
+            printf("Erro ao ler o arquivo.\n");
             free(vetor);
             fclose(arquivo);
             return NULL;
@@ -70,6 +78,11 @@ void merge(int* vet, int inicio, int meio, int fim) {
     int marcadorV2 = meio + 1;
     int* aux = (int*)malloc((fim - inicio + 1) * sizeof(int));
     int i = 0;
+
+    if (aux == NULL) {
+        printf("Erro ao alocar memória.\n");
+        return;
+    }
 
     while (marcadorV1 <= meio && marcadorV2 <= fim) {
         if (vet[marcadorV1] < vet[marcadorV2]) {
