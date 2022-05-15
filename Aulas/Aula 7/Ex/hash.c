@@ -11,7 +11,7 @@
 
 struct hash {
     lista** tabela;
-    int tam;
+    int tamanho;
 };
 
 
@@ -28,7 +28,7 @@ hash* criaHash(int tam) {
         printf("Erro ao alocar memória para a tabela hash.\n");
         return NULL;
     }
-    h->tam = tam;
+    h->tamanho = tam;
 
     for (int i = 0; i < tam; i++) {
         h->tabela[i] = criaLista();
@@ -51,15 +51,20 @@ int funcaoHash(char* palavra, int tamHash) {
 
 //Insere uma nova palavra na hash utilizando a função insereLista da TAD lista.
 void insere(hash* h, char* palavra) {
-    int pos = funcaoHash(palavra, h->tam);
+    int pos = funcaoHash(palavra, h->tamanho);
     insereLista(h->tabela[pos], palavra);
 }
 
 //Verifica a presença de uma palavra na tabela hash utilizando a função buscaLista da TAD lista
 //Se o elemento estiver presente, retorna a posição dele na Hash. Caso contrário, retorna -1.
 int encontraElemento(hash* h, char* palavra) {
-    int pos = funcaoHash(palavra, h->tam);
-    return buscaLista(h->tabela[pos], palavra);
+    int pos = funcaoHash(palavra, h->tamanho);
+
+    if (buscaLista(h->tabela[pos], palavra)) {
+        return pos;
+    }
+
+    return -1;
 }
 
 //Imprime a lista de uma posição da hash utilizando a função imprimeLista da TAD lista
@@ -75,7 +80,7 @@ int getTamanhoLista(hash* h, int pos) {
 //Remove uma palavra da hash utilizando as funções encontraElemento e removeLista da TAD lista.
 //Se o elemento existia na hash e foi removido, retorna 0. Caso contrário, retorna -1.
 int removeElemento(hash* h, char* palavra) {
-    int pos = funcaoHash(palavra, h->tam);
+    int pos = funcaoHash(palavra, h->tamanho);
     if (encontraElemento(h, palavra) != -1) {
         removeLista(h->tabela[pos], palavra);
         return 0;
