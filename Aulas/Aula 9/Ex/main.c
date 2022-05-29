@@ -2,14 +2,14 @@
 #include "avl.h"
 
 int main() {
-    char nomeArquivo[100];
+    char nomeArquivo[100] = "as";
     avl* novaArvore = criaArvore();
 
-    scanf("%s", nomeArquivo);
+    // scanf("%s", nomeArquivo);
 
     carregaArvore(novaArvore, nomeArquivo);
     percorre(getRaiz(novaArvore));
-    
+
 
     return 0;
 }

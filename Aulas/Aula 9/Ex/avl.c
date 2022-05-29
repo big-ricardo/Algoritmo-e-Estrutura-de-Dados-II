@@ -61,7 +61,7 @@ int carregaArvore(avl* arv, char* nomeArquivo) {
 //Retorna 0 caso a inserção aconteça e -1 caso contrário
 int insereNo(avl* arv, int chave) {
     no* novoNo = (no*)malloc(sizeof(no));
-    no* atual = arv->sentinela;
+    no* atual = getRaiz(arv);
     no* pai = NULL;
 
     novoNo->chave = chave;
@@ -80,15 +80,21 @@ int insereNo(avl* arv, int chave) {
         }
     }
 
-    if (pai->chave < chave) {
-        pai->dir = novoNo;
+    if (pai == NULL) {
+        arv->sentinela->dir = novoNo;
+        novoNo->pai = arv->sentinela;
     }
     else {
-        pai->esq = novoNo;
-    }
+        if (chave < pai->chave) {
+            pai->esq = novoNo;
+        }
+        else {
+            pai->dir = novoNo;
+        }
 
-    novoNo->pai = pai;
-    arv->numElementos++;
+        novoNo->pai = pai;
+        arv->numElementos++;
+    }
 
     atualizaFbInsercao(arv, novoNo);
 
@@ -217,24 +223,135 @@ int getNumElementos(avl* arv) {
     return arv->numElementos;
 }
 
-void atualizaFbInsercao(avl *arv, no* novoNo){
-    no *aux = novoNo;
+void atualizaFbInsercao(avl* arv, no* novoNo) {
+    no* aux = novoNo;
 
-    do{
-        if( novoNo->chave < aux->pai->chave){
-            aux->pai->fb--;
-        } else {
-            aux->pai->fb++;
+    do {
+        if (aux->pai != arv->sentinela) {
+            if (aux->pai->chave < aux->chave) {
+                aux->pai->fb++;
+            }
+            else {
+                aux->pai->fb--;
+            }
+            aux = aux->pai;
         }
-        aux = aux->pai;
-    } while((aux->fb >= -1 && aux->fb <= 1) && aux->pai != NULL);
-
-    if(aux->fb  >= 2 || aux->fb <= -2){
+    } while (aux->pai != arv->sentinela && aux->fb != 0);
+    // imprimeNo(aux);
+    if (aux->fb == -2 || aux->fb == 2) {
         balanceamentoInsercao(arv, aux);
     }
 
 }
 
-void balanceamentoInsercao(avl * arv, no* noDesbalanceado){
+void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
 
+    no* filho = NULL;
+
+    if (noDesbalanceado->fb == 2) {
+        filho = noDesbalanceado->dir;
+        if (filho->fb == -1) {
+            int fbNeto = filho->esq->fb;
+            rotacaoDir(arv, filho);
+            rotacaoEsq(arv, noDesbalanceado);
+            if (fbNeto == -1) {
+                atualizaFbInsercao(arv, noDesbalanceado->dir);
+            }
+            else {
+                atualizaFbInsercao(arv, noDesbalanceado->esq);
+                atualizaFbInsercao(arv, filho->dir);
+            }
+        }
+        else {
+            rotacaoEsq(arv, noDesbalanceado);
+            atualizaFbInsercao(arv, noDesbalanceado);
+            if (filho->fb == 0) {
+                noDesbalanceado->fb = 0;
+                filho->fb = 0;
+            }
+            else {
+                noDesbalanceado->fb = -1;
+                filho->fb = 0;
+            }
+        }
+    }
+    else {
+        filho = noDesbalanceado->esq;
+        if (filho->fb == 1) {
+            int fbNeto = filho->dir->fb;
+            rotacaoEsq(arv, filho);
+            rotacaoDir(arv, noDesbalanceado);
+            if (fbNeto == -1) {
+                atualizaFbInsercao(arv, noDesbalanceado->dir);
+            }
+            else {
+                atualizaFbInsercao(arv, noDesbalanceado->esq);
+            }
+        }
+        else {
+            rotacaoDir(arv, noDesbalanceado);
+            atualizaFbInsercao(arv, noDesbalanceado->pai);
+            if (filho->fb == 0) {
+                noDesbalanceado->fb = 0;
+                filho->fb = 0;
+            }
+            else {
+                noDesbalanceado->fb = -1;
+                filho->fb = 0;
+            }
+
+        }
+    }
+}
+
+void rotacaoEsq(avl* arv, no* noDesbalanceado) {
+    no* filho = noDesbalanceado->dir;
+    noDesbalanceado->dir = filho->esq;
+
+    if (filho->esq != NULL) {
+        filho->esq->pai = noDesbalanceado;
+    }
+
+    filho->esq = noDesbalanceado->pai;
+
+    if (noDesbalanceado->pai == NULL) {
+        arv->sentinela = filho;
+    }
+    else {
+        if (noDesbalanceado == noDesbalanceado->pai->esq) {
+            noDesbalanceado->pai->esq = filho;
+        }
+        else {
+            noDesbalanceado->pai->dir = filho;
+        }
+    }
+
+    filho->esq = noDesbalanceado;
+    noDesbalanceado->pai = filho;
+}
+
+void rotacaoDir(avl* arv, no* noDesbalanceado) {
+    no* filho = noDesbalanceado->esq;
+    noDesbalanceado->esq = filho->dir;
+
+    if (filho->dir != NULL) {
+        filho->dir->pai = noDesbalanceado;
+    }
+
+    filho->dir = noDesbalanceado->pai;
+
+    if (noDesbalanceado->pai == NULL) {
+        arv->sentinela = filho;
+    }
+    else {
+        if (noDesbalanceado == noDesbalanceado->pai->esq) {
+            noDesbalanceado->pai->esq = filho;
+        }
+        else {
+            noDesbalanceado->pai->dir = filho;
+        }
+    }
+
+    filho->dir = noDesbalanceado;
+    noDesbalanceado->pai = filho;
 }
