@@ -254,25 +254,9 @@ void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
             int fbNeto = filho->esq->fb;
             rotacaoDir(arv, filho);
             rotacaoEsq(arv, noDesbalanceado);
-            if (fbNeto == -1) {
-                atualizaFbInsercao(arv, noDesbalanceado->dir);
-            }
-            else {
-                atualizaFbInsercao(arv, noDesbalanceado->esq);
-                atualizaFbInsercao(arv, filho->dir);
-            }
         }
         else {
             rotacaoEsq(arv, noDesbalanceado);
-            atualizaFbInsercao(arv, noDesbalanceado);
-            if (filho->fb == 0) {
-                noDesbalanceado->fb = 0;
-                filho->fb = 0;
-            }
-            else {
-                noDesbalanceado->fb = -1;
-                filho->fb = 0;
-            }
         }
     }
     else {
@@ -281,25 +265,9 @@ void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
             int fbNeto = filho->dir->fb;
             rotacaoEsq(arv, filho);
             rotacaoDir(arv, noDesbalanceado);
-            if (fbNeto == -1) {
-                atualizaFbInsercao(arv, noDesbalanceado->dir);
-            }
-            else {
-                atualizaFbInsercao(arv, noDesbalanceado->esq);
-            }
         }
         else {
             rotacaoDir(arv, noDesbalanceado);
-            atualizaFbInsercao(arv, noDesbalanceado->pai);
-            if (filho->fb == 0) {
-                noDesbalanceado->fb = 0;
-                filho->fb = 0;
-            }
-            else {
-                noDesbalanceado->fb = -1;
-                filho->fb = 0;
-            }
-
         }
     }
 }
