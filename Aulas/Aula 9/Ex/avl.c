@@ -251,51 +251,65 @@ void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
     if (noDesbalanceado->fb == 2) {
         filho = noDesbalanceado->dir;
         if (filho->fb == -1) {
-            int fbNeto = filho->esq->fb;
+            no* neto = filho->esq;
             rotacaoDir(arv, filho);
             rotacaoEsq(arv, noDesbalanceado);
-            if (fbNeto == -1) {
-                noDesbalanceado->fb = 1;
-                filho->fb = 0;
+            if (neto->fb == 0) {
+                noDesbalanceado->fb = 0;
+                neto->fb = 0;
             }
-            else if (fbNeto == 0) {
+            else if (neto->fb == 1) {
+                noDesbalanceado->fb = -1;
+                neto->fb = 0;
+            }
+            else if (neto->fb == -1) {
+                noDesbalanceado->fb = 0;
+                neto->fb = 1;
+            }
+
+        }
+        else {
+            rotacaoEsq(arv, noDesbalanceado);
+            if (filho->fb == 1) {
                 noDesbalanceado->fb = 0;
                 filho->fb = 0;
             }
             else {
-                noDesbalanceado->fb = -1;
-                filho->fb = 0;
+                noDesbalanceado->fb = 1;
+                filho->fb = -1;
             }
-
-            atualizaFbInsercao(arv, noDesbalanceado);
-        }
-        else {
-            rotacaoEsq(arv, noDesbalanceado);
         }
     }
     else {
         filho = noDesbalanceado->esq;
         if (filho->fb == 1) {
-            int fbNeto = filho->dir->fb;
+            no* neto = filho->dir;
             rotacaoEsq(arv, filho);
             rotacaoDir(arv, noDesbalanceado);
-            if (fbNeto == 1) {
-                noDesbalanceado->fb = -1;
+            if (neto->fb == 0) {
+                noDesbalanceado->fb = 0;
                 filho->fb = 0;
             }
-            else if (fbNeto == 0) {
+            else if (neto->fb == 1) {
                 noDesbalanceado->fb = 0;
-                filho->fb = 1;
+                filho->fb = -1;
             }
             else {
                 noDesbalanceado->fb = 1;
                 filho->fb = 0;
             }
-
-            atualizaFbInsercao(arv, noDesbalanceado);
+            neto->fb = 0;
         }
         else {
             rotacaoDir(arv, noDesbalanceado);
+            if (filho->fb == -1) {
+                noDesbalanceado->fb = 0;
+                filho->fb = 0;
+            }
+            else {
+                noDesbalanceado->fb = -1;
+                filho->fb = 1;
+            }
         }
     }
 }
