@@ -83,6 +83,10 @@ int insereNo(avl* arv, int chave) {
     if (pai == NULL) {
         arv->sentinela->dir = novoNo;
         novoNo->pai = arv->sentinela;
+
+        arv->numElementos++;
+
+        return 0;
     }
     else {
         if (chave < pai->chave) {
@@ -194,7 +198,7 @@ no* recuperaNo(avl* arv, int chave) {
 //Se o pai for a sentinela, imprime Sentinela
 void imprimeNo(no* atual) {
     if (atual != NULL) {
-        printf("\n\n########################\n");
+        printf("\n########################\n");
         printf("Chave : %d\n", atual->chave);
         printf("Fb: %d\n", atual->fb);
         if (atual->esq != NULL) {
@@ -227,17 +231,16 @@ void atualizaFbInsercao(avl* arv, no* novoNo) {
     no* aux = novoNo;
 
     do {
-        if (aux->pai != arv->sentinela) {
-            if (aux->pai->chave < aux->chave) {
-                aux->pai->fb++;
-            }
-            else {
-                aux->pai->fb--;
-            }
-            aux = aux->pai;
+        if (aux->pai->chave < aux->chave) {
+            aux->pai->fb++;
         }
-    } while (aux->pai != arv->sentinela && aux->fb != 0);
-    // imprimeNo(aux);
+        else {
+            aux->pai->fb--;
+        }
+        aux = aux->pai;
+
+    } while (aux->pai != arv->sentinela && aux->fb != 0 && aux->fb != 2 && aux->fb != -2);
+
     if (aux->fb == -2 || aux->fb == 2) {
         balanceamentoInsercao(arv, aux);
     }
@@ -256,16 +259,17 @@ void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
             rotacaoEsq(arv, noDesbalanceado);
             if (neto->fb == 0) {
                 noDesbalanceado->fb = 0;
-                neto->fb = 0;
+                filho->fb = 0;
             }
             else if (neto->fb == 1) {
                 noDesbalanceado->fb = -1;
-                neto->fb = 0;
+                filho->fb = 0;
             }
             else if (neto->fb == -1) {
                 noDesbalanceado->fb = 0;
-                neto->fb = 1;
+                filho->fb = 1;
             }
+            neto->fb = 0;
 
         }
         else {
@@ -336,6 +340,7 @@ void rotacaoEsq(avl* arv, no* noDesbalanceado) {
         }
     }
 
+    filho->pai = noDesbalanceado->pai;
     filho->esq = noDesbalanceado;
     noDesbalanceado->pai = filho;
 }
@@ -362,6 +367,7 @@ void rotacaoDir(avl* arv, no* noDesbalanceado) {
         }
     }
 
+    filho->pai = noDesbalanceado->pai;
     filho->dir = noDesbalanceado;
     noDesbalanceado->pai = filho;
 }
