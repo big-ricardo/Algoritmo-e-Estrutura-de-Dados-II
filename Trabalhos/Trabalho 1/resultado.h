@@ -4,7 +4,7 @@
 typedef int bool;
 
 
-// Struct que armazena as metricas dosresultados das ordenações
+// Struct que armazena as metricas dos resultados das ordenações
 typedef struct {
     double tempo;
     unsigned long int comparacoes;

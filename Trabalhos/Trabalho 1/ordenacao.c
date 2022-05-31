@@ -28,7 +28,7 @@ void selecao(Registro* r, int* vet, int tam) {
             aux = vet[i];
             vet[i] = vet[menor];
             vet[menor] = aux;
-            copias += 3;
+            copias++;
         }
     }
 
@@ -53,7 +53,7 @@ int  particiona(Registro* r, int* vet, int inicio, int fim) {
                 aux = vet[pos];
                 vet[pos] = vet[i];
                 vet[i] = aux;
-                copias += 3;
+                copias++;
             }
         }
     }
@@ -62,7 +62,7 @@ int  particiona(Registro* r, int* vet, int inicio, int fim) {
     vet[inicio] = vet[pos];
     vet[pos] = aux;
 
-    copias += 3;
+    copias++;
 
     r->comparacoes += comparacoes;
     r->copias += copias;
@@ -108,14 +108,14 @@ void mobileSort(Registro* r, int* vet, int tam) {
             int aux = vet[i];
             vet[i] = vet[menor];
             vet[menor] = aux;
-            copias += 3;
+            copias++;
         }
 
         if (maior != tam - 1) {
             int aux = vet[tam - 1];
             vet[tam - 1] = vet[maior];
             vet[maior] = aux;
-            copias += 3;
+            copias++;
         }
 
         comparacoes += 2;
@@ -127,6 +127,7 @@ void mobileSort(Registro* r, int* vet, int tam) {
     r->copias = copias;
 }
 
+// Função responsavel por criar um arquivo para salvar os as ordenações
 bool criarArquivoOrdenacao(char* metodo) {
     char path[40] = "";
 
@@ -145,6 +146,7 @@ bool criarArquivoOrdenacao(char* metodo) {
     return true;
 }
 
+// Função responsavel por escrever os resultados no arquivo de ordenação
 bool salvarOrdenacao(Registro r, int* vet, int tam) {
     char path[40] = "";
 
@@ -157,14 +159,20 @@ bool salvarOrdenacao(Registro r, int* vet, int tam) {
         return false;
     }
 
+    if (fprintf(arquivo, "%c %d %d\n", r.tipo, r.qtd, r.caso) < 0) {
+        printf("Erro ao salvar ordenacao %s.\n", path);
+        return false;
+    }
+
     for (int i = 0; i < tam; i++) {
+
         if (fprintf(arquivo, "%d ", vet[i]) < 0) {
             printf("Erro ao salvar registro no arquivo de ordenacao %s.\n", path);
             return false;
         }
     }
 
-    if (fprintf(arquivo, "\n ---------\n") < 0) {
+    if (fprintf(arquivo, "\n ----------------------------\n") < 0) {
         printf("Erro ao salvar registro no arquivo de ordenacao %s.\n", path);
         return false;
     }

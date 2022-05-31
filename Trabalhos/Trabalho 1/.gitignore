@@ -1,0 +1,5 @@
+auditoria/*
+casos_teste/*
+resultados/*
+*.o
+*.exe

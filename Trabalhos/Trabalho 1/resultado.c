@@ -10,13 +10,15 @@
 #define true 1
 #define false 0
 
-#define RESULTADO_TXT "./resutados/r"
-#define SELECTION_SORT "selectionSort"
-#define QUICK_SORT "quickSort"
-#define MOBILE_SORT "mobileSort"
+#define RESULTADO_TXT "./resutados/r" // path base dos arquivos de resultados
 
-#define AUDITORIA true
+#define SELECTION_SORT "selectionSort" // nome do algoritmo de ordenação
+#define QUICK_SORT "quickSort"       // nome do algoritmo de ordenação
+#define MOBILE_SORT "mobileSort"    // nome do algoritmo de ordenação
 
+#define AUDITORIA true // Se true, gera os arquivos que salvam as ordenações feitas
+
+// Responsacel com computar o tempo de execução de um algoritmo do artigo
 bool computarOrdenacaoMobileSort(Registro* r, int* vet, int tamanho) {
 
     clock_t inicio, fim;
@@ -31,6 +33,7 @@ bool computarOrdenacaoMobileSort(Registro* r, int* vet, int tamanho) {
     return true;
 }
 
+// Responsacel com computar o tempo de execução do algoritmo seleção
 bool computarOrdenacaoSelectionSort(Registro* r, int* vetor, int tamanho) {
 
     clock_t inicio, fim;
@@ -44,6 +47,7 @@ bool computarOrdenacaoSelectionSort(Registro* r, int* vetor, int tamanho) {
     return true;
 }
 
+// Responsacel com computar o tempo de execução do algoritmo quick sort
 bool computarOrdenacaoQuickSort(Registro* r, int* vetor, int tamanho) {
 
     clock_t inicio, fim;
@@ -57,6 +61,7 @@ bool computarOrdenacaoQuickSort(Registro* r, int* vetor, int tamanho) {
     return true;
 }
 
+// Função responsável chamar o algoritmo de ordenação que le é passado
 bool realizarOrdenacao(char tipo, char metodo, int tam, int casos_teste) {
 
     bool salvarRegistro(Registro);
@@ -115,6 +120,7 @@ bool realizarOrdenacao(char tipo, char metodo, int tam, int casos_teste) {
     return true;
 }
 
+// Função responsável por gerar o arquivo ou limpar caso já exista e salvar o header
 bool criarArquivoResultado(char* metodo) {
     char path[40] = "";
 
@@ -138,6 +144,7 @@ bool criarArquivoResultado(char* metodo) {
     return true;
 }
 
+// Função responsável por salvar o registro da execução no arquivo de resultado
 bool salvarRegistro(Registro r) {
     char path[40] = "";
 
@@ -160,6 +167,7 @@ bool salvarRegistro(Registro r) {
     return true;
 }
 
+// Função responsável por criar ou limpar o arquivo de resultados
 bool zerarArquivosResultados() {
 
     if (!criarArquivoResultado(SELECTION_SORT))
