@@ -10,7 +10,7 @@ int main() {
     carregaArvore(novaArvore, nomeArquivo);
     // percorre(getRaiz(novaArvore));
 
-    removeNo(novaArvore, 25);
+    removeNo(novaArvore, 15);
     percorre(getRaiz(novaArvore));
 
 
