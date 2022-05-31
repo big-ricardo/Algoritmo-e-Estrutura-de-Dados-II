@@ -110,7 +110,7 @@ int insereNo(avl* arv, int chave) {
 //Retorna -1 caso a árvore esteja vazia
 //Retorna -2 caso o elemento não esteja presente na árvore
 int removeNo(avl* arv, int chave) {
-    no* atual = arv->sentinela;
+    no* atual = arv->sentinela->dir;
     no* filho = NULL;
     no* aux = NULL;
 
@@ -157,6 +157,10 @@ int removeNo(avl* arv, int chave) {
         else {
             atual->pai->dir = filho;
         }
+    }
+
+    if (atual->pai != arv->sentinela && atual->fb == 0) {
+        atualizaFbRemocao(arv, atual->pai, atual->chave);
     }
 
     free(atual);
@@ -239,15 +243,37 @@ void atualizaFbInsercao(avl* arv, no* novoNo) {
         }
         aux = aux->pai;
 
-    } while (aux->pai != arv->sentinela && aux->fb != 0 && aux->fb != 2 && aux->fb != -2);
+    } while (aux->pai != arv->sentinela && aux->fb != 0 && (aux->fb != 2 || aux->fb != -2));
 
     if (aux->fb == -2 || aux->fb == 2) {
-        balanceamentoInsercao(arv, aux);
+        balanceamento(arv, aux);
     }
 
 }
 
-void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
+void atualizaFbRemocao(avl* arv, no* pai, int chave) {
+    no* aux = pai;
+
+    do {
+        if (aux->chave < chave) {
+            aux->fb--;
+        }
+        else {
+            aux->fb++;
+        }
+
+        if (aux->pai != arv->sentinela) {
+            aux = aux->pai;
+        }
+
+    } while (aux->pai != arv->sentinela && aux->fb != 0 && (aux->fb != 2 || aux->fb != -2));
+
+    if (aux->fb == -2 || aux->fb == 2) {
+        balanceamento(arv, aux);
+    }
+}
+
+void balanceamento(avl* arv, no* noDesbalanceado) {
 
     no* filho = NULL;
 
@@ -271,6 +297,11 @@ void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
             }
             neto->fb = 0;
 
+        }
+        else if (filho->fb == 0) {
+            rotacaoEsq(arv, noDesbalanceado);
+            noDesbalanceado->fb = 1;
+            filho->fb = -1;
         }
         else {
             rotacaoEsq(arv, noDesbalanceado);
@@ -303,6 +334,11 @@ void balanceamentoInsercao(avl* arv, no* noDesbalanceado) {
                 filho->fb = 0;
             }
             neto->fb = 0;
+        }
+        else if (filho->fb == 0) {
+            rotacaoDir(arv, noDesbalanceado);
+            noDesbalanceado->fb = -1;
+            filho->fb = 1;
         }
         else {
             rotacaoDir(arv, noDesbalanceado);

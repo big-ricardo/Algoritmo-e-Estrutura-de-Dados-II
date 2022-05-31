@@ -8,6 +8,9 @@ int main() {
     // scanf("%s", nomeArquivo);
 
     carregaArvore(novaArvore, nomeArquivo);
+    // percorre(getRaiz(novaArvore));
+
+    removeNo(novaArvore, 25);
     percorre(getRaiz(novaArvore));
 
 
