@@ -3,7 +3,6 @@
 #include "avl.h"
 
 /*
-  Diovana Tavares dos Reis - 2021016991
   Luis Ricardo Albano Santos - 2021031844
 */
 
@@ -13,6 +12,7 @@ struct no {
     no* esq;
     no* dir;
     no* pai;
+    int altura;
 };
 
 struct arvore {
@@ -85,6 +85,7 @@ int insereNo(avl* arv, int chave) {
         novoNo->pai = arv->sentinela;
 
         arv->numElementos++;
+        novoNo->altura = 0;
 
         return 0;
     }
@@ -98,11 +99,19 @@ int insereNo(avl* arv, int chave) {
 
         novoNo->pai = pai;
         arv->numElementos++;
+
+        if (pai->esq == NULL || pai->dir == NULL) {
+            novoNo->altura++;
+        }
     }
 
-    atualizaFbInsercao(arv, novoNo);
+    atualizaFB_Insercao(arv, novoNo);
 
     return 0;
+}
+
+int getAltura(no* arv) {
+    return arv->altura;
 }
 
 //Remove um elemento da árvore
@@ -160,7 +169,7 @@ int removeNo(avl* arv, int chave) {
     }
 
     if (atual->pai != arv->sentinela && atual->fb == 0) {
-        atualizaFbRemocao(arv, atual->pai, atual->chave);
+        atualizaFB_Remocao(arv, atual->pai, atual->chave);
     }
 
     free(atual);
@@ -217,7 +226,7 @@ void imprimeNo(no* atual) {
         else {
             printf("Filho Dir : NULO\n");
         }
-        if (atual->pai->chave != -1000) {
+        if (atual->pai != NULL && atual->pai->pai != NULL) {
             printf("Pai : %d\n", atual->pai->chave);
         }
         else {
@@ -231,7 +240,7 @@ int getNumElementos(avl* arv) {
     return arv->numElementos;
 }
 
-void atualizaFbInsercao(avl* arv, no* novoNo) {
+void atualizaFB_Insercao(avl* arv, no* novoNo) {
     no* aux = novoNo;
 
     do {
@@ -243,7 +252,7 @@ void atualizaFbInsercao(avl* arv, no* novoNo) {
         }
         aux = aux->pai;
 
-    } while (aux->pai != arv->sentinela && aux->fb != 0 && (aux->fb != 2 || aux->fb != -2));
+    } while (aux->pai != arv->sentinela && aux->fb != 0 && (aux->fb != 2 && aux->fb != -2));
 
     if (aux->fb == -2 || aux->fb == 2) {
         balanceamento(arv, aux);
@@ -251,25 +260,37 @@ void atualizaFbInsercao(avl* arv, no* novoNo) {
 
 }
 
-void atualizaFbRemocao(avl* arv, no* pai, int chave) {
+void atualizaFB_Remocao(avl* arv, no* pai, int chave) {
     no* aux = pai;
 
-    do {
+    if (aux->chave < chave) {
+        aux->fb--;
+    }
+    else {
+        aux->fb++;
+    }
+
+    if (aux->fb != 2 && aux->fb != -2) {
+        aux = aux->pai;
+    }
+
+    while (aux != arv->sentinela && aux->fb == 0) {
+
         if (aux->chave < chave) {
             aux->fb--;
         }
         else {
             aux->fb++;
         }
-
-        if (aux->pai != arv->sentinela) {
-            aux = aux->pai;
-        }
-
-    } while (aux->pai != arv->sentinela && aux->fb != 0 && (aux->fb != 2 || aux->fb != -2));
+        aux = aux->pai;
+    }
 
     if (aux->fb == -2 || aux->fb == 2) {
         balanceamento(arv, aux);
+        aux = aux->pai;
+        if (aux != arv->sentinela && aux->fb == 0) {
+            atualizaFB_Remocao(arv, aux->pai, chave);
+        }
     }
 }
 

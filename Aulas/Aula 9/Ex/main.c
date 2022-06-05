@@ -1,18 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "avl.h"
 
 int main() {
-    char nomeArquivo[100] = "as";
+    int chave;
+    char nomeArquivo[100]; // = "entrada.txt";
     avl* novaArvore = criaArvore();
 
-    // scanf("%s", nomeArquivo);
+    scanf("%s", nomeArquivo);
 
     carregaArvore(novaArvore, nomeArquivo);
-    // percorre(getRaiz(novaArvore));
+    percorre(getRaiz(novaArvore));
+    printf("\nAltura da arvore: %d.\n", getAltura(getRaiz(novaArvore)));
 
-    removeNo(novaArvore, 15);
+    scanf("%d", &chave);
+    removeNo(novaArvore, chave);
+
     percorre(getRaiz(novaArvore));
 
+    scanf("%d", &chave);
+    removeNo(novaArvore, chave);
 
-    return 0;
+    scanf("%d", &chave);
+    removeNo(novaArvore, chave);
+
+    printf("\n");
+
+    percorre(getRaiz(novaArvore));
+    printf("\nAltura da arvore: %d.\n", getAltura(getRaiz(novaArvore)));
+
+    free(novaArvore);
 }
