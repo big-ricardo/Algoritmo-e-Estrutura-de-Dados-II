@@ -12,7 +12,6 @@ struct no {
     no* esq;
     no* dir;
     no* pai;
-    int altura;
 };
 
 struct arvore {
@@ -85,7 +84,6 @@ int insereNo(avl* arv, int chave) {
         novoNo->pai = arv->sentinela;
 
         arv->numElementos++;
-        novoNo->altura = 0;
 
         return 0;
     }
@@ -99,10 +97,6 @@ int insereNo(avl* arv, int chave) {
 
         novoNo->pai = pai;
         arv->numElementos++;
-
-        if (pai->esq == NULL || pai->dir == NULL) {
-            novoNo->altura++;
-        }
     }
 
     atualizaFB_Insercao(arv, novoNo);
@@ -110,8 +104,18 @@ int insereNo(avl* arv, int chave) {
     return 0;
 }
 
-int getAltura(no* arv) {
-    return arv->altura;
+int getAltura(no* raiz) {
+    if ((raiz == NULL) || (raiz->esq == NULL && raiz->dir == NULL)) {
+        return 0;
+    }
+    else { //retorna a pilha do lado com maior profundidade
+        if (getAltura(raiz->esq) > getAltura(raiz->dir)) {
+            return 1 + getAltura(raiz->esq);
+        }
+        else {
+            return 1 + getAltura(raiz->dir);
+        }
+    }
 }
 
 //Remove um elemento da árvore
@@ -168,7 +172,7 @@ int removeNo(avl* arv, int chave) {
         }
     }
 
-    if (atual->pai != arv->sentinela && atual->fb == 0) {
+    if (atual->pai != arv->sentinela) {
         atualizaFB_Remocao(arv, atual->pai, atual->chave);
     }
 
@@ -182,8 +186,8 @@ int removeNo(avl* arv, int chave) {
 //printf("%d\t", raiz->chave)
 void percorre(no* raiz) {
     if (raiz != NULL) {
-        // printf("%d\t", raiz->chave);
-        imprimeNo(raiz);
+        printf("%d: %d\t", raiz->chave, raiz->fb);
+        // imprimeNo(raiz);
         percorre(raiz->esq);
         percorre(raiz->dir);
     }
@@ -244,7 +248,7 @@ void atualizaFB_Insercao(avl* arv, no* novoNo) {
     no* aux = novoNo;
 
     do {
-        if (aux->pai->chave < aux->chave) {
+        if (aux->pai->chave <= aux->chave) {
             aux->pai->fb++;
         }
         else {
@@ -263,26 +267,21 @@ void atualizaFB_Insercao(avl* arv, no* novoNo) {
 void atualizaFB_Remocao(avl* arv, no* pai, int chave) {
     no* aux = pai;
 
-    if (aux->chave < chave) {
+    if (aux->chave <= chave) {
         aux->fb--;
     }
     else {
         aux->fb++;
     }
 
-    if (aux->fb != 2 && aux->fb != -2) {
-        aux = aux->pai;
-    }
-
     while (aux != arv->sentinela && aux->fb == 0) {
-
-        if (aux->chave < chave) {
+        aux = aux->pai;
+        if (aux->chave <= chave) {
             aux->fb--;
         }
         else {
             aux->fb++;
         }
-        aux = aux->pai;
     }
 
     if (aux->fb == -2 || aux->fb == 2) {
@@ -385,17 +384,14 @@ void rotacaoEsq(avl* arv, no* noDesbalanceado) {
 
     filho->esq = noDesbalanceado->pai;
 
-    if (noDesbalanceado->pai == NULL) {
-        arv->sentinela = filho;
+
+    if (noDesbalanceado == noDesbalanceado->pai->esq) {
+        noDesbalanceado->pai->esq = filho;
     }
     else {
-        if (noDesbalanceado == noDesbalanceado->pai->esq) {
-            noDesbalanceado->pai->esq = filho;
-        }
-        else {
-            noDesbalanceado->pai->dir = filho;
-        }
+        noDesbalanceado->pai->dir = filho;
     }
+
 
     filho->pai = noDesbalanceado->pai;
     filho->esq = noDesbalanceado;
@@ -412,17 +408,13 @@ void rotacaoDir(avl* arv, no* noDesbalanceado) {
 
     filho->dir = noDesbalanceado->pai;
 
-    if (noDesbalanceado->pai == NULL) {
-        arv->sentinela = filho;
+    if (noDesbalanceado == noDesbalanceado->pai->esq) {
+        noDesbalanceado->pai->esq = filho;
     }
     else {
-        if (noDesbalanceado == noDesbalanceado->pai->esq) {
-            noDesbalanceado->pai->esq = filho;
-        }
-        else {
-            noDesbalanceado->pai->dir = filho;
-        }
+        noDesbalanceado->pai->dir = filho;
     }
+
 
     filho->pai = noDesbalanceado->pai;
     filho->dir = noDesbalanceado;

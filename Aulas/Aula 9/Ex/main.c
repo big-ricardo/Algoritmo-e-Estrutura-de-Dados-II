@@ -15,14 +15,15 @@ int main() {
 
     scanf("%d", &chave);
     removeNo(novaArvore, chave);
-
     percorre(getRaiz(novaArvore));
 
     scanf("%d", &chave);
     removeNo(novaArvore, chave);
+    percorre(getRaiz(novaArvore));
 
     scanf("%d", &chave);
     removeNo(novaArvore, chave);
+    percorre(getRaiz(novaArvore));
 
     printf("\n");
 
