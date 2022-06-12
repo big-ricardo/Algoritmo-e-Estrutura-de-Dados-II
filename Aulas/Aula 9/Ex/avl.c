@@ -4,6 +4,7 @@
 
 /*
   Luis Ricardo Albano Santos - 2021031844
+  Guilherme Schimidt - 2020011524
 */
 
 struct no {
