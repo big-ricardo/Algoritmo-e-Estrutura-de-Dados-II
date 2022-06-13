@@ -157,6 +157,7 @@ int removeNo(rb* arv, int chave) {
     no* atual = getRaiz(arv);
     no* filho = NULL;
     no* aux = NULL;
+    no* sucessor = NULL;
 
     if (atual == NULL) {
         printf("Erro: Árvore vazia\n");
@@ -179,24 +180,22 @@ int removeNo(rb* arv, int chave) {
 
     if (atual->esq != getNULL(arv) && atual->dir != getNULL(arv)) {
         aux = atual->dir;
-        while (aux->esq != NULL) {
+        while (aux->esq != getNULL(arv)) {
             aux = aux->esq;
         }
+        sucessor = atual;
         atual->chave = aux->chave;
         atual = aux;
     }
 
-    char corAux = atual->cor;
-    int chaveAux = atual->chave;
-
-    if (atual->esq != NULL) {
+    if (atual->esq != getNULL(arv)) {
         filho = atual->esq;
     }
     else {
         filho = atual->dir;
     }
 
-    if (filho != NULL) {
+    if (filho != getNULL(arv)) {
         filho->pai = atual->pai;
     }
 
@@ -212,12 +211,15 @@ int removeNo(rb* arv, int chave) {
         }
     }
 
+    char corAux = atual->cor;
+    int auxChave = atual->chave;
+    no* pai = sucessor->pai;
 
     free(atual);
     arv->numElementos--;
 
     if (corAux == 'p') {
-        balanceamentoRemocao(arv, aux, filho->pai, chave);
+        balanceamentoRemocao(arv, sucessor, pai, auxChave);
     }
 
     return 0;
@@ -362,6 +364,34 @@ void balanceamentoRemocao(rb* arv, no* sucessor, no* pai, int chave) {
                 pai->cor = 'p';
                 irmao->dir->cor = 'p';
                 rotacaoEsq(arv, pai);
+                sucessor = getRaiz(arv);
+                pai = NULL;
+            }
+        }
+        else {
+            no* irmao = pai->esq;
+            if (irmao->cor == 'v') {
+                irmao->cor = 'p';
+                pai->cor = 'v';
+                rotacaoDir(arv, pai);
+                irmao = pai->esq;
+            }
+            if (irmao->dir->cor == 'p' && irmao->esq->cor == 'p') {
+                irmao->cor = 'v';
+                sucessor = pai;
+                pai = pai->pai;
+            }
+            else {
+                if (irmao->esq->cor == 'p') {
+                    irmao->dir->cor = 'p';
+                    irmao->cor = 'v';
+                    rotacaoEsq(arv, irmao);
+                    irmao = pai->esq;
+                }
+                irmao->cor = pai->cor;
+                pai->cor = 'p';
+                irmao->esq->cor = 'p';
+                rotacaoDir(arv, pai);
                 sucessor = getRaiz(arv);
                 pai = NULL;
             }

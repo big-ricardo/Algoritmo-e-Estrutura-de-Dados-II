@@ -181,12 +181,13 @@ int removeNo(avl* arv, int chave) {
     }
 
     int auxChave = atual->chave;
-    free(atual);
-    arv->numElementos--;
 
     if (atual->pai != arv->sentinela) {
         atualizaFB_Remocao(arv, atual->pai, auxChave);
     }
+
+    free(atual);
+    arv->numElementos--;
 
     return 0;
 }
