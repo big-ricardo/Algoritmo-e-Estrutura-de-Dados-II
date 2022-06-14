@@ -17,18 +17,18 @@ int main() {
     removeNo(novaArvore, chave);
     percorre(getRaiz(novaArvore));
 
-    // scanf("%d", &chave);
-    // removeNo(novaArvore, chave);
-    // percorre(getRaiz(novaArvore));
+    scanf("%d", &chave);
+    removeNo(novaArvore, chave);
+    percorre(getRaiz(novaArvore));
 
-    // scanf("%d", &chave);
-    // removeNo(novaArvore, chave);
-    // percorre(getRaiz(novaArvore));
+    scanf("%d", &chave);
+    removeNo(novaArvore, chave);
+    percorre(getRaiz(novaArvore));
 
-    // printf("\n");
+    printf("\n");
 
-    // percorre(getRaiz(novaArvore));
-    // printf("\nAltura da arvore: %d.\n", getAltura(getRaiz(novaArvore)));
+    percorre(getRaiz(novaArvore));
+    printf("\nAltura da arvore: %d.\n", getAltura(getRaiz(novaArvore)));
 
     free(novaArvore);
 }

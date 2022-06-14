@@ -183,7 +183,6 @@ int removeNo(rb* arv, int chave) {
         while (aux->esq != getNULL(arv)) {
             aux = aux->esq;
         }
-        sucessor = atual;
         atual->chave = aux->chave;
         atual = aux;
     }
@@ -209,11 +208,12 @@ int removeNo(rb* arv, int chave) {
         else {
             atual->pai->dir = filho;
         }
+        sucessor = filho;
     }
 
     char corAux = atual->cor;
     int auxChave = atual->chave;
-    no* pai = sucessor->pai;
+    no* pai = atual->pai;
 
     free(atual);
     arv->numElementos--;
@@ -340,7 +340,7 @@ void balanceamentoInsercao(rb* arv, no* novoNo) {
 //sucessor é o nó que ficou no lugar do nó removido
 void balanceamentoRemocao(rb* arv, no* sucessor, no* pai, int chave) {
     while (sucessor->cor == 'p' && pai != NULL) {
-        if (sucessor == pai->esq) {
+        if (chave < pai->chave) {
             no* irmao = pai->dir;
             if (irmao->cor == 'v') {
                 irmao->cor = 'p';
@@ -397,6 +397,8 @@ void balanceamentoRemocao(rb* arv, no* sucessor, no* pai, int chave) {
             }
         }
     }
+
+    sucessor->cor = 'p';
 }
 
 void rotacaoEsq(rb* arv, no* noDesbalanceado) {
