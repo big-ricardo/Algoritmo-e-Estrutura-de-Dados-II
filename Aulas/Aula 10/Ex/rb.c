@@ -4,7 +4,7 @@
 
 /*
   Luis Ricardo Albano Santos - 2021031844
-  Guilherme Schimidt - 2020011524
+  Matheus Martins Batista 2019005687
 */
 
 struct no {
@@ -76,8 +76,27 @@ int carregaArvore(rb* arv, char* nomeArquivo) {
 
     while (fscanf(arq, "%d", &num) != EOF) {
         insereNo(arv, num);
-        percorre(getRaiz(arv));
-        printf("\n");
+    }
+
+    fclose(arq);
+    return 0;
+}
+
+//Remove elementos de uma árvore rubro-negra a partir de números contidos no arquivo
+//Retorna -1 caso haja erros durante a remoção e/ou leitura do arquivo
+//Retorna 0 caso contrário
+int removeElementos(rb* arv, char* nomeArquivo) {
+    FILE* arq;
+    int num;
+
+    arq = fopen(nomeArquivo, "r");
+    if (arq == NULL) {
+        printf("Erro ao abrir arquivo\n");
+        return -1;
+    }
+
+    while (fscanf(arq, "%d", &num) != EOF) {
+        removeNo(arv, num);
     }
 
     fclose(arq);
@@ -179,19 +198,19 @@ int removeNo(rb* arv, int chave) {
     }
 
     if (atual->esq != getNULL(arv) && atual->dir != getNULL(arv)) {
-        aux = atual->dir;
-        while (aux->esq != getNULL(arv)) {
-            aux = aux->esq;
+        aux = atual->esq;
+        while (aux->dir != getNULL(arv)) {
+            aux = aux->dir;
         }
         atual->chave = aux->chave;
         atual = aux;
     }
 
-    if (atual->esq != getNULL(arv)) {
-        filho = atual->esq;
+    if (atual->dir != getNULL(arv)) {
+        filho = atual->dir;
     }
     else {
-        filho = atual->dir;
+        filho = atual->esq;
     }
 
     if (filho != getNULL(arv)) {
@@ -221,7 +240,6 @@ int removeNo(rb* arv, int chave) {
     if (corAux == 'p') {
         balanceamentoRemocao(arv, sucessor, pai, auxChave);
     }
-
     return 0;
 }
 
@@ -229,8 +247,7 @@ int removeNo(rb* arv, int chave) {
 //printf("%d\t", raiz->chave)
 void percorre(no* raiz) {
     if (raiz->chave != -2000) {
-        printf("%d: %c\t", raiz->chave, raiz->cor);
-        // imprimeNo(raiz);
+        printf("%d: %c  ", raiz->chave, raiz->cor);
         percorre(raiz->esq);
         percorre(raiz->dir);
     }
@@ -261,19 +278,19 @@ void imprimeNo(rb* arv, no* atual) {
         printf("\n########################\n");
         printf("Chave : %d\n", atual->chave);
         printf("Cor: %c\n", atual->cor);
-        if (atual->esq != NULL) {
+        if (atual->esq != getNULL(arv)) {
             printf("Filho Esq : %d\n", atual->esq->chave);
         }
         else {
             printf("Filho Esq : NULO\n");
         }
-        if (atual->dir != NULL) {
+        if (atual->dir != getNULL(arv)) {
             printf("Filho Dir : %d\n", atual->dir->chave);
         }
         else {
             printf("Filho Dir : NULO\n");
         }
-        if (atual->pai != NULL && atual->pai->pai != NULL) {
+        if (atual->pai != getNULL(arv) && atual->pai->pai != getNULL(arv)) {
             printf("Pai : %d\n", atual->pai->chave);
         }
         else {
@@ -339,8 +356,8 @@ void balanceamentoInsercao(rb* arv, no* novoNo) {
 //Se houve, faz o balanceamento
 //sucessor é o nó que ficou no lugar do nó removido
 void balanceamentoRemocao(rb* arv, no* sucessor, no* pai, int chave) {
-    while (sucessor->cor == 'p' && pai != NULL) {
-        if (chave < pai->chave) {
+    while (sucessor->cor == 'p' && sucessor != getRaiz(arv)) {
+        if (chave <= pai->chave) {
             no* irmao = pai->dir;
             if (irmao->cor == 'v') {
                 irmao->cor = 'p';
