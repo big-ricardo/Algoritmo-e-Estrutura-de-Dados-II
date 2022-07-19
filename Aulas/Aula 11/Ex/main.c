@@ -5,7 +5,7 @@
 int main() {
 
     char nomeArquivoEntrada[30] = "ent";
-    char nomeArquivoRemove[30] = "as";
+    char nomeArquivoRemove[30] = "sai";
     int ordem;
 
     // scanf("%s", nomeArquivoEntrada);
@@ -21,12 +21,12 @@ int main() {
 
     manipulaBTree(b, nomeArquivoEntrada, 'i');
 
-    // imprimeArvore((retornaRaiz(b)), 0);
+    imprimeArvore((retornaRaiz(b)), 0);
     printf("\n");
 
     manipulaBTree(b, nomeArquivoRemove, 'r');
 
-    // imprimeArvore((retornaRaiz(b)), 0);
+    imprimeArvore((retornaRaiz(b)), 0);
 
     printf("\n");
 

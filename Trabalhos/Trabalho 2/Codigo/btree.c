@@ -7,22 +7,9 @@
   Matheus Martins Batista 2019005687
 */
 
-struct no {
-    int* chaves;
-    no** ponteiros;
-    no* pai;
-    int folha;
-    int ocupacao;
-};
-
-struct btree {
-    int ordem;
-    no* raiz;
-};
-
 //Função que aloca e inicializa um novo nó
-no* alocaNo(int ordem) {
-    no* novoNo = (no*)malloc(sizeof(no));
+noBt* alocaNo(int ordem) {
+    noBt* novoNo = (noBt*)malloc(sizeof(noBt));
     if (novoNo == NULL) {
         printf("Erro ao alocar novo nó\n");
         return NULL;
@@ -32,7 +19,7 @@ no* alocaNo(int ordem) {
         printf("Erro ao alocar chaves\n");
         return NULL;
     }
-    novoNo->ponteiros = (no**)malloc(sizeof(no*) * (ordem));
+    novoNo->ponteiros = (noBt**)malloc(sizeof(noBt*) * (ordem));
     if (novoNo->ponteiros == NULL) {
         printf("Erro ao alocar ponteiros\n");
         return NULL;
@@ -51,7 +38,7 @@ no* alocaNo(int ordem) {
 
 //Função que aloca e inicializa uma nova árvore com uma raiz alocada, porém vazia.
 //Árvore B tradicional. A ordem m deve ser sempre par. Caso contrário, retorna NULL.
-btree* criaArvore(int m) {
+btree* criaArvoreBt(int m) {
     if (m % 2 == 0) {
         btree* arvore = (btree*)malloc(sizeof(btree));
         if (arvore == NULL) {
@@ -73,29 +60,30 @@ btree* criaArvore(int m) {
 }
 
 //Função que retorna a raiz da árvore
-no* retornaRaiz(btree* arvore) {
+noBt* retornaRaiz(btree* arvore) {
     return arvore->raiz;
 }
 
 //Função recursiva que imprime a árvore por profundidade
 //Raiz, filho da esquerda até chegar na folha. E sobe imprimindo os filhos em sequência
-void imprimeArvore(no* atual, int filho) {
+void imprimeArvore(noBt* atual, int filho) {
     if (atual == NULL) return;
 
     if (atual->ocupacao == 0) {
         printf("Vazio");
+
         return;
     }
 
     if (atual->folha == 1) {
         for (int i = 0; i < atual->ocupacao; i++) {
-            printf("%d  ", atual->chaves[i]);
+            printf("%d ", atual->chaves[i]);
         }
         printf("\n");
     }
     else {
         for (int i = 0; i < atual->ocupacao; i++) {
-            printf("%d  ", atual->chaves[i]);
+            printf("%d ", atual->chaves[i]);
         }
         printf("\n");
         for (int i = 0; i <= atual->ocupacao; i++) {
@@ -105,7 +93,7 @@ void imprimeArvore(no* atual, int filho) {
 }
 
 //Função recursiva que retorna o nó onde o elemento está na árvore
-no* buscaElemento(no* atual, int valor) {
+noBt* buscaElemento(noBt* atual, int valor) {
     if (atual == NULL) return NULL;
     int i = 0;
     while (i < atual->ocupacao && valor > atual->chaves[i]) i++;
@@ -119,7 +107,7 @@ no* buscaElemento(no* atual, int valor) {
 //Ou seja, se a folha estiver cheia, primeiro realiza o split e depois insere
 //Se houve a inserção, retorna 1. Caso contrário, retorna -1
 int insereElemento(btree* arvore, int valor) {
-    no* atual = arvore->raiz;
+    noBt* atual = arvore->raiz;
     int c = atual->ocupacao;
 
     if (atual->ponteiros[0] == NULL && c < arvore->ordem - 1) {
@@ -162,8 +150,8 @@ int insereElemento(btree* arvore, int valor) {
 //Se houve a remoção, retorna 1. Caso contrário, retorna -1
 int removeElemento(btree* arvore, int valor) {
 
-    no* noRemove = buscaElemento(arvore->raiz, valor);
-    no* noAux;
+    noBt* noRemove = buscaElemento(arvore->raiz, valor);
+    noBt* noAux;
 
     if (noRemove == NULL) {
         printf("Elemento não encontrado\n");
@@ -195,7 +183,7 @@ int removeElemento(btree* arvore, int valor) {
     minimo = minimo == 0 ? 1 : minimo;
 
     while (noRemove != NULL && noRemove->ocupacao < minimo && noRemove != arvore->raiz) {
-        no* pai = noRemove->pai;
+        noBt* pai = noRemove->pai;
         int indice = 0;
         while (indice < pai->ocupacao && valor > pai->chaves[indice]) indice++;
 
@@ -224,12 +212,12 @@ int removeElemento(btree* arvore, int valor) {
 //Função chamada pela função insereElemento
 //Sempre sobe o elemento do meio para o pai (m é sempre par).
 //Caso o pai esteja cheio, a função se chama recursivamente.
-no* split(btree* arvore, no* noDesbal, int valor) {
+noBt* split(btree* arvore, noBt* noDesbal, int valor) {
 
 
     int meio = (arvore->ordem - 1) / 2;
-    no* pai = noDesbal->pai;
-    no* novoNo = alocaNo(arvore->ordem);
+    noBt* pai = noDesbal->pai;
+    noBt* novoNo = alocaNo(arvore->ordem);
     int chaveMeio = noDesbal->chaves[meio];
 
     novoNo->folha = noDesbal->folha;
@@ -256,7 +244,7 @@ no* split(btree* arvore, no* noDesbal, int valor) {
     novoNo->ponteiros[aux] = NULL;
 
     if (pai == NULL) {
-        no* novaRaix = alocaNo(arvore->ordem);
+        noBt* novaRaix = alocaNo(arvore->ordem);
         novaRaix->folha = 0;
         novaRaix->pai = NULL;
         novaRaix->chaves[0] = chaveMeio;
@@ -306,8 +294,8 @@ no* split(btree* arvore, no* noDesbal, int valor) {
 
 //Função que implementa a rotação, levanto um elemento do pai para o nóDesbal e subindo um elemento do no irmão para o pai
 // A variável posPai guarda a posição do ponteiro do pai que aponta para o nó noDesbal
-void rotacao(no* noDesbal, no* irmao, int posPai) {
-    no* pai = irmao->pai;
+void rotacao(noBt* noDesbal, noBt* irmao, int posPai) {
+    noBt* pai = irmao->pai;
 
     if (pai->ponteiros[posPai - 1] == irmao) {
 
@@ -342,12 +330,12 @@ void rotacao(no* noDesbal, no* irmao, int posPai) {
 //Função que implementa o merge do nó Desbal com seu irmão da esquerda ou da direita
 //Se a variãvel posPai é maior que zero, o merge acontece com o irmão da esquerda
 //Caso contrário, com o irmão da direita
-no* merge(no* noDesbal, int posPai) {
-    no* pai = noDesbal->pai;
+noBt* merge(noBt* noDesbal, int posPai) {
+    noBt* pai = noDesbal->pai;
 
     if (posPai > 0) {
 
-        no* irmao = pai->ponteiros[posPai - 1];
+        noBt* irmao = pai->ponteiros[posPai - 1];
         irmao->chaves[irmao->ocupacao] = pai->chaves[posPai - 1];
         irmao->ocupacao++;
         for (int i = 0; i < noDesbal->ocupacao; i++) {
@@ -374,7 +362,7 @@ no* merge(no* noDesbal, int posPai) {
         return irmao;
     }
     else {
-        no* irmao = pai->ponteiros[posPai + 1];
+        noBt* irmao = pai->ponteiros[posPai + 1];
         noDesbal->chaves[noDesbal->ocupacao] = pai->chaves[posPai];
         noDesbal->ocupacao++;
         for (int i = 0; i < irmao->ocupacao; i++) {
